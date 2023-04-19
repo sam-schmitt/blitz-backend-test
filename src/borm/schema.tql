@@ -1,0 +1,18 @@
+define 
+
+# Shared
+id sub attribute, value string;
+name sub attribute, value string;
+
+User sub entity,
+    owns id @key,
+    owns name,
+    plays Parenthood:parent,
+    plays Parenthood:child;
+
+Parenthood sub relation,
+    owns id @key,
+    relates parent,
+    relates child;
+
+

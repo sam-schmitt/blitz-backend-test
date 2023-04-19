@@ -1,0 +1,7 @@
+insert
+
+$user-1 isa User, has id "user1", has name "John";
+$user-2 isa User, has id "user2", has name "Jane";
+
+$parenthood-1-2 (parent: $user-1, child: $user-2) isa Parenthood, has id 'ph1-2';
+
