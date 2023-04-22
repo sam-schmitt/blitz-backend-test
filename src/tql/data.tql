@@ -1,0 +1,19 @@
+insert
+# one user doesn't have a last name, testing the error
+$single-mom isa User, has id "single-mom", has firstname "Jane";
+$single-mom-child isa User, has id "single-mom-child", has firstname "Arthur", has lastname "Morgan";
+$couple-dad isa User, has id "couple-dad", has firstname "Mark", has lastname "Daniels";
+$couple-mom isa User, has id "couple-mom", has firstname "Nancy", has lastname "Robinson";
+$couple-child isa User, has id "couple-child", has firstname "Paul", has lastname "Daniels";
+$single-dad isa User, has id "single-dad", has firstname "Frank", has lastname "Peterson";
+$single-dad-child isa User, has id "single-dad-child", has firstname "Peter", has lastname "Peterson";
+$dad-to-add isa User, has id "dad-to-add", has firstname "Richard", has lastname "Anderson";
+
+
+
+$single-mom-hood (mom: $single-mom, child: $single-mom-child) isa Parenthood, has id 'single-mom-hood';
+$single-dad-hood (dad: $single-dad, child: $single-dad-child) isa Parenthood, has id 'single-dad-hood';
+
+$couple-hood (dad: $couple-dad, mom: $couple-mom, child: $couple-child) isa Parenthood, has id 'couple-hood';
+
+

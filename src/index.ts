@@ -1,83 +1,40 @@
 import bormClient from "./borm/client.ts";
 
-type User = {
-	name: string;
-};
-
-async function getUsers() {
-	const res = await bormClient.query({ $entity: "User" });
-	return res;
-}
-
 async function getParenthoods() {
 	const res = await bormClient.query({ $relation: "Parenthood" });
 	return res;
 }
 
-async function getUser({ name }: { name: string }) {
-	const res = await bormClient.query({
-		$entity: "User",
-		$filter: {
-			name,
+const addDadToAllParenthoods = async (dadId: string) => {
+	const res = await bormClient.mutate([
+		// add a new dad to all parenthoods
+		{
+			$relation: "Parenthood",
 		},
-	});
-	return res;
-}
+		// remove the old dad from parenthoods that have two dads
+		{
+			$relation: "Parenthood",
+		},
+	]);
 
-async function createUser({ name }: { name: string }) {
-	const res = await bormClient.mutate({
-		$entity: "User",
-		name,
-	});
 	return res;
-}
-
-async function createParenthood({
-	parent,
-	child,
-}: {
-	parent: any;
-	child: any;
-}) {
-	const res = await bormClient.mutate({
-		$relation: "Parenthood",
-		parent: parent.id,
-		child: child.id,
-	});
-	return res;
-}
-
-async function createParentThenChildren({
-	parent,
-	children,
-}: {
-	parent: User;
-	children: User[];
-}) {
-	const createdParent = await createUser(parent);
-	for (let child of children) {
-		const createdChild = await createUser(child);
-		await createParenthood({ parent: createdParent, child: createdChild });
-	}
-}
+};
 
 async function test() {
 	try {
-		console.log("Getting users...");
-		let users = await getUsers();
-		console.log("Users: ", users);
-		console.log("Getting Sam...");
-		let user = await getUser({ name: "Samuel Schmitt" });
-		console.log("User: ", user);
-
-		// trying to test creating parents and their children while creating their relations
-		const parent = { name: "Parent Test" };
-		const children = [{ name: "Child 1 test" }, { name: "Child 2 test" }];
-		await createParentThenChildren({ parent, children });
-		users = await getUsers();
-		console.log("Users: ", users);
+		// 1. Show Parenthoods before mutation
+		console.log("Getting parenthoods...");
 		let parenthoods = await getParenthoods();
-		console.log("parenthoods: ", parenthoods);
+		console.log("Parenthoods: ", parenthoods);
+
+		// 2. Perform mutation to add a dad to all parenthoods
+		console.log("Adding global dad...");
+		let writtenDads = await addDadToAllParenthoods("dad-to-add");
+		console.log("Written dads: ", writtenDads);
+
+		// 3. Show Parenthoods after mutation
+		console.log("Getting new parenthoods...");
+		parenthoods = await getParenthoods();
 		return "Finished";
 	} catch (e: any) {
 		return e;

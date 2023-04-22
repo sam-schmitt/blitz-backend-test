@@ -2,9 +2,16 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { BormSchema, DataField } from "@blitznocode/blitz-orm";
 
-export const name: DataField = {
+export const firstname: DataField = {
 	shared: true,
-	path: "name",
+	path: "firstname",
+	cardinality: "ONE",
+	contentType: "TEXT",
+};
+
+export const lastname: DataField = {
+	shared: true,
+	path: "lastname",
 	cardinality: "ONE",
 	contentType: "TEXT",
 };
@@ -36,17 +43,27 @@ export const schema: BormSchema = {
 		User: {
 			idFields: ["id"], // could be a namecomposite key
 			defaultDBConnector: { id: "default" }, // in the future multiple can be specified in the config file. Either they fetch full schemas or they will require a relation to merge attributes from different databases
-			dataFields: [{ ...id }, { ...name, rights: ["CREATE", "UPDATE"] }],
+			dataFields: [
+				{ ...id },
+				{ ...firstname, ...lastname, rights: ["CREATE", "UPDATE"] },
+			],
 			linkFields: [
 				{
-					path: "parenthoods",
+					path: "dad",
 					relation: "Parenthood",
 					cardinality: "MANY",
-					plays: "parent",
+					plays: "dad",
 					target: "role",
 				},
 				{
-					path: "parenthoods",
+					path: "mom",
+					relation: "Parenthood",
+					cardinality: "MANY",
+					plays: "mom",
+					target: "role",
+				},
+				{
+					path: "child",
 					relation: "Parenthood",
 					cardinality: "MANY",
 					plays: "child",
@@ -62,11 +79,14 @@ export const schema: BormSchema = {
 			// defaultDBConnector: { id: 'tdb', path: 'User·Account' }, //todo: when Dbpath != relation name
 			dataFields: [{ ...id }],
 			roles: {
-				parent: {
-					cardinality: "ONE",
+				dad: {
+					cardinality: "MANY",
+				},
+				mom: {
+					cardinality: "MANY",
 				},
 				child: {
-					cardinality: "ONE",
+					cardinality: "MANY",
 				},
 			},
 		},

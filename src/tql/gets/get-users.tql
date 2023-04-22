@@ -1,0 +1,2 @@
+match
+    $user isa User, has firstname $f, has lastname $l;

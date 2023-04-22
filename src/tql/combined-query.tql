@@ -1,0 +1,14 @@
+# adds new element to all relations without value, adds user as duplicate value on the relation
+match
+    $parenthood isa Parenthood;
+    $d isa User, has id "dad-to-add";
+    
+insert
+    $parenthood (dad: $d);
+
+# removes the duplicate values
+match
+    $a isa User, has id "dad-to-add";
+    $p (dad:$a, dad:$b) isa Parenthood;
+delete
+    $p (dad:$b);

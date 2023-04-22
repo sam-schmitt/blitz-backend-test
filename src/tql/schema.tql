@@ -1,0 +1,22 @@
+define 
+
+id sub attribute, value string;
+firstname sub attribute, value string;
+lastname sub attribute, value string;
+
+
+User sub entity,
+    owns id @key,
+    owns firstname,
+    owns lastname,
+    plays Parenthood:dad,
+    plays Parenthood:mom,
+    plays Parenthood:child;
+
+Parenthood sub relation,
+    owns id @key,
+    relates dad,
+    relates mom,
+    relates child;
+
+
