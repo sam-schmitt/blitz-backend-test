@@ -10,6 +10,8 @@ In TQL, there is no option for `UPDATE`. So instead, the method to update attrib
 2. Then delete the attributes you are updating.
 3. Finally, you can then insert data to replace those attributes, and this is all accomplished in one stream.
 
+!['Update'](/screenshots/update.png)
+
 This is already pretty inefficient, and it leads to a very bad error, which is what I’ve been tasked to attempt to solve.
 
 When you are going through relations that you would like to replace one attribute in bulk, if one single relation is missing that attribute, then you will be unable to perform this bulk update. The reason why is that in the deletion step, you are unable to delete an attribute that does not exist.
@@ -18,9 +20,20 @@ This makes it impossible to effectively make updates to large sets of relations 
 
 ## My Solution
 
+The example I used was a family structured relation, which each relation able to have fathers, mothers, and children.
+In my test data, I included three different families.
+
+1. A mother and child
+2. A father and child
+3. A mother, father, and child
+
+!['Families'](/screenshots/families.png)
+
 Initially, I attempted to figure out how to do this in one stream mutation. However, it seems to be very difficult to accomplish this, especially without an UPDATE feature in TQL.
 
 So, instead, I decided to dedicate my time to finding a method that works in two streams. The solution that I came up with goes like this:
+
+!['Stream 1'](/screenshots/stream-1.png)
 
 **Stream 1**
 
@@ -29,12 +42,16 @@ So, instead, I decided to dedicate my time to finding a method that works in two
 
 _Notice how I skipped the delete step._
 
+!['Stream 2'](/screenshots/stream-2.png)
+
 **Stream 2**
 
 1. Now we are able to query for all relations that have two values instead of 1.
 2. I am able to define which of these values is the new value by knowing which value we just added.
 3. Then I define the second older value as another variable.
 4. I can then delete the older variable, which leaves us with our desired output.
+
+!['After the Update'](/screenshots/finished.png)
 
 ## Drawbacks
 
@@ -43,6 +60,8 @@ This method is also highly inefficient. First, it still requires two streams to 
 ## BlitzQL
 
 I attempted to translate this TQL mutation into BlitzQL; however, I had difficulties learning the syntax based on only browsing through the libraries node_modules files and the mock folder from the first interface builder challenge I was given. I instead decided it would be best to wait for the opportunity to work alongside a developer at Blitz who would most likely be able to translate this into BlitzQL quite easily, as I am under the impression that anything you can do in TQL should be possible in BlitzQL.
+
+!['BlitzQL'](/screenshots/blitzql.png)
 
 ## Closing Thoughts
 

@@ -12,3 +12,11 @@ match
     $p (dad:$a, dad:$b) isa Parenthood;
 delete
     $p (dad:$b);
+    
+    
+    
+    
+    
+    
+    
+    
